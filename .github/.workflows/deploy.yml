@@ -1,27 +1,26 @@
 name: Deploy Hugo Site to S3
 
 # 1. 언제 실행할 것인가?
-# 'main' 브랜치에 'push'가 일어났을 때
 on:
   push:
     branches:
       - main
 
 jobs:
-  Deploy:
+  Deploy: # (YAML 파일은 2칸 들여쓰기가 규칙입니다)
     name: Build and Deploy
     # 2. 어디서 실행할 것인가?
-    runs-on: ubuntu-latest #Linux 가상 머신에서 실행
+    runs-on: ubuntu-latest # Linux 가상 머신에서 실행
 
     steps:
       # 3. 무엇을 할 것인가? (순서대로)
-
+      
       # 1단계: Git 리포지토리의 코드를 가상 머신으로 내려받기
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: true # Hugo 테마가 submodule일 경우 포함
-        
+
       # 2단계: Hugo 설치하기
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -38,7 +37,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+          # S3 버킷(hyosup17-dev)이 있는 리전을 정확히 적어주세요.
+          aws-region: ap-northeast-2 
 
       # 5단계: S3에 빌드된 파일 업로드 (수동으로 'aws s3 sync' 한 것과 동일)
       - name: Deploy to S3
@@ -50,4 +50,4 @@ jobs:
       # "파일이 바뀌었으니 캐시를 지워야함"이라고 알려줘야한다.
       - name: Invalidate CloudFront
         run: |
-          aws cloudfront create-invalidation --distribution-id dpo19cg5l5od9.cloudfront.net --paths "/*"  
+          aws cloudfront create-invalidation --distribution-id EJX5CXJZMLAKM --paths "/*"
