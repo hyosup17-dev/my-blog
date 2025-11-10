@@ -1,0 +1,13 @@
+# Hugo
+/public/
+/resources/
+
+# Terraform
+/terraform/.terraform/
+/terraform/terraform.tfstate
+/terraform/terraform.tfstate.backup
+*.tfvars
+
+# OS specific
+.DS_Store
+Thumbs.db
